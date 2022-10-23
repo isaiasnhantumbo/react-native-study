@@ -1,5 +1,7 @@
+import { useNavigation } from "@react-navigation/native";
 import { ReactNode } from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, Text, TouchableOpacity } from "react-native";
+import { RectButton } from "react-native-gesture-handler";
 import { RFValue } from "react-native-responsive-fontsize";
 
 import Logo from "../../assets/logo.svg";
@@ -17,6 +19,10 @@ export function Home() {
     thumbnail:
       "https://www.pngkey.com/png/full/383-3833840_rs-5-coup-price-from-audi-rs5-png.png",
   };
+  const navigation = useNavigation();
+  function handleGoToCarDetails() {
+    navigation.navigate("CarDetails");
+  }
 
   return (
     <Container>
@@ -32,9 +38,14 @@ export function Home() {
         </HeaderContent>
       </Header>
       <CarList
-        data={[1, 2, 3,5,6,8,61,23,13]}
+        data={[1, 3]}
         keyExtractor={(item) => String(item)}
-        renderItem={(item) => <Car data={car} />}
+        renderItem={(item) => (
+          <Car
+            data={car}
+            onPress={handleGoToCarDetails}
+          />
+        )}
       />
     </Container>
   );

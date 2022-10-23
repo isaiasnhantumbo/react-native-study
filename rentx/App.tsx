@@ -13,11 +13,8 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ThemeProvider } from "styled-components";
+import Routes from "./src/routes";
 
-import { CarDetails } from "./src/screens/CarDetails";
-import { Home } from "./src/screens/Home";
-import { Scheduling } from "./src/screens/Scheduling";
-import { SchedulingDetails } from "./src/screens/SchedulingDetails";
 import theme from "./src/styles/theme";
 
 export default function App() {
@@ -33,7 +30,7 @@ export default function App() {
   }
   return (
     <ThemeProvider theme={theme}>
-      <SchedulingDetails />
+      <Routes />
     </ThemeProvider>
   );
 }

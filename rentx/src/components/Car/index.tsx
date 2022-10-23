@@ -1,5 +1,6 @@
 import React from "react";
-import { Image } from "react-native";
+import { Image, TouchableOpacityProps } from "react-native";
+import { RectButtonProps } from "react-native-gesture-handler";
 
 import GasolineSvg from "../../assets/gasoline.svg";
 import {
@@ -25,13 +26,14 @@ interface CarProps {
   thumbnail: string;
 }
 
-type Props = {
+interface Props extends TouchableOpacityProps {
   data: CarProps;
-};
+  onPress: () => void;
+}
 
-export function Car({ data }: Props) {
+export function Car({ data, ...rest }: Props) {
   return (
-    <Container>
+    <Container {...rest}>
       <Details>
         <Brand>{data.brand}</Brand>
         <Name>{data.name}</Name>

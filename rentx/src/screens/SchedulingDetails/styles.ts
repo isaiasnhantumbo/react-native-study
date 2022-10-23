@@ -129,3 +129,8 @@ export const RentalPriceTotal = styled.Text`
   color: ${({ theme }) => theme.colors.success};
   font-size: ${RFValue(24)}px;
 `;
+
+export const Footer = styled.View`
+
+  padding: 8px 12px;
+`;
