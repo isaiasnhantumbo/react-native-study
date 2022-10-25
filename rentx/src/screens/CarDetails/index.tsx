@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import AccelarationSvg from "../../assets/accelaration.svg";
 import ExchangeSvg from "../../assets/exchange.svg";
 import GasolineSvg from "../../assets/gasoline.svg";
@@ -9,6 +9,7 @@ import { Accessory } from "../../components/Accessory";
 import { BackButton } from "../../components/BackButton";
 import { Button } from "../../components/Button";
 import { ImageSlider } from "../../components/ImageSlider";
+import { CarDTO } from "../../Dtos/ICar";
 import {
   About,
   Accessories,
@@ -26,49 +27,50 @@ import {
   Rent,
 } from "./styles";
 
-interface CarDetailsProps {}
+interface Params {
+  car: CarDTO;
+}
 
-export function CarDetails({}: CarDetailsProps) {
+export function CarDetails() {
   const navigation = useNavigation();
+  const { car } = useRoute().params as Params;
   function handleConfirmRental() {
     navigation.navigate("Scheduling");
   }
   return (
     <Container>
       <Header>
-        <BackButton onPress={() => {}} />
+        <BackButton
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
       </Header>
       <CarImages>
-        <ImageSlider
-          imagesUrl={[
-            "https://www.pngkey.com/png/full/383-3833840_rs-5-coup-price-from-audi-rs5-png.png",
-          ]}
-        />
+        <ImageSlider imagesUrl={car.photos} />
       </CarImages>
       <Content>
         <Details>
           <Description>
-            <Brand>Audi</Brand>
-            <Name>RS 450 Coupe </Name>
+            <Brand>{car.brand}</Brand>
+            <Name>{car.name}</Name>
           </Description>
           <Rent>
-            <Period>Ao dia</Period>
-            <Price>580 Mt</Price>
+            <Period>{car.rent.period}</Period>
+            <Price>{car.rent.price} Mt</Price>
           </Rent>
         </Details>
         <Accessories>
-          <Accessory accessoryName="380 Km/h" icon={SpeedSvg} />
-          <Accessory accessoryName="3.2s" icon={AccelarationSvg} />
+          {car.accessories.map((accessory) => (
+            <Accessory accessoryName={accessory.name} icon={SpeedSvg} />
+          ))}
+          {/* <Accessory accessoryName="3.2s" icon={AccelarationSvg} />
           <Accessory accessoryName="800 HP" icon={ForceSvg} />
           <Accessory accessoryName="Gasolina" icon={GasolineSvg} />
           <Accessory accessoryName="Auto" icon={ExchangeSvg} />
-          <Accessory accessoryName="2 pessoas" icon={PeopleSvg} />
+          <Accessory accessoryName="2 pessoas" icon={PeopleSvg} /> */}
         </Accessories>
-        <About>
-          Este é automóvel desportivo. Surgiu do lendário touro de lide
-          indultado na praça Real Maestranza de Sevilla. É um belíssimo carro
-          para quem gosta de acelerar.
-        </About>
+        <About>{car.about}</About>
       </Content>
       <Footer>
         <Button

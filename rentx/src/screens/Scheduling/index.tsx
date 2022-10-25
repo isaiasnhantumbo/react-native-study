@@ -35,7 +35,7 @@ export function Scheduling() {
         backgroundColor="transparent"
       />
       <Header>
-        <BackButton onPress={() => {}} color={theme.colors.shape} />
+        <BackButton onPress={() => {navigation.goBack()}} color={theme.colors.shape} />
         <Title>
           Escolha uma {"\n"}data de inicio e {"\n"}fim do aluguel
         </Title>
