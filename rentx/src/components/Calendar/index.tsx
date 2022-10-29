@@ -1,54 +1,33 @@
 import { Feather } from "@expo/vector-icons";
 import {
+  CalendarProps,
   Calendar as CustomCalendar,
   LocaleConfig,
 } from "react-native-calendars";
 import { useTheme } from "styled-components";
-interface CalendarProps {}
 
-LocaleConfig.locales["pt-br"] = {
-  monthNames: [
-    "Janeiro",
-    "Fevereiro",
-    "Março",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro",
-  ],
-  monthNamesShort: [
-    "Jan",
-    "Fev",
-    "Mar",
-    "Abr",
-    "Mai",
-    "Jun",
-    "Jul",
-    "Ago",
-    "Set",
-    "Out",
-    "Nov",
-    "Dez",
-  ],
-  dayNames: [
-    "Domingo",
-    "Segunda-Feira",
-    "Terça-Feira",
-    "Quarta-Feira",
-    "Quinta-Feira",
-    "Sexta-Feira",
-    "Sábado",
-  ],
-  dayNamesShort: ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"],
-  today: "Hoje",
-};
+import { ptBR } from "./localeConfig";
+
+LocaleConfig.locales["pt-br"] = ptBR;
 LocaleConfig.defaultLocale = "pt-br";
-export function Calendar({}: CalendarProps) {
+
+export interface MarkedDateProps {
+  [date: string]: {
+    color: string;
+    textColor?: string;
+    disabled?: boolean;
+    disableTouchEvent: boolean;
+  };
+}
+export interface DayProps {
+  dateString: string;
+  day: number;
+  month: number;
+  year: number;
+  timestamp: number;
+}
+
+export function Calendar({ markedDates, onDayPress }: CalendarProps) {
   const theme = useTheme();
   return (
     <CustomCalendar
@@ -71,14 +50,17 @@ export function Calendar({}: CalendarProps) {
         textDayHeaderFontFamily: theme.fonts.primary_400,
         textDayHeaderFontSize: 10,
         textMonthFontSize: 20,
-        textMonthFontFamily:theme.fonts.secondary_600,
+        textMonthFontFamily: theme.fonts.secondary_600,
         monthTextColor: theme.colors.title,
         arrowStyle: {
           marginHorizontal: -15,
         },
       }}
       firstDay={1}
-      minDate={new Date()}
+      minDate={String(new Date())}
+      markingType="period"
+      markedDates={markedDates}
+      onDayPress={onDayPress}
     />
   );
 }

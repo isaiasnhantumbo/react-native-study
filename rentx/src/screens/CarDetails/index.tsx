@@ -1,15 +1,11 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import AccelarationSvg from "../../assets/accelaration.svg";
-import ExchangeSvg from "../../assets/exchange.svg";
-import GasolineSvg from "../../assets/gasoline.svg";
-import PeopleSvg from "../../assets/people.svg";
-import ForceSvg from "../../assets/power.svg";
-import SpeedSvg from "../../assets/speed.svg";
+
 import { Accessory } from "../../components/Accessory";
 import { BackButton } from "../../components/BackButton";
 import { Button } from "../../components/Button";
 import { ImageSlider } from "../../components/ImageSlider";
 import { CarDTO } from "../../Dtos/ICar";
+import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 import {
   About,
   Accessories,
@@ -35,7 +31,7 @@ export function CarDetails() {
   const navigation = useNavigation();
   const { car } = useRoute().params as Params;
   function handleConfirmRental() {
-    navigation.navigate("Scheduling");
+    navigation.navigate("Scheduling", { car });
   }
   return (
     <Container>
@@ -62,7 +58,11 @@ export function CarDetails() {
         </Details>
         <Accessories>
           {car.accessories.map((accessory) => (
-            <Accessory accessoryName={accessory.name} icon={SpeedSvg} />
+            <Accessory
+              key={accessory.type}
+              accessoryName={accessory.name}
+              icon={getAccessoryIcon(accessory.type)}
+            />
           ))}
           {/* <Accessory accessoryName="3.2s" icon={AccelarationSvg} />
           <Accessory accessoryName="800 HP" icon={ForceSvg} />

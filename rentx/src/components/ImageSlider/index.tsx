@@ -7,7 +7,10 @@ import {
 } from "./styles";
 
 interface ImageSliderProps {
-  imagesUrl: string[];
+  imagesUrl: {
+    id: string;
+    photo: string;
+  }[];
 }
 
 export function ImageSlider({ imagesUrl }: ImageSliderProps) {
@@ -20,7 +23,13 @@ export function ImageSlider({ imagesUrl }: ImageSliderProps) {
         <ImageIndex active={false} />
       </ImageIndexes>
       <CarImagemWrapper>
-        <CarImage source={{ uri: imagesUrl[0] }} resizeMode="contain" />
+        {imagesUrl.map((image) => (
+          <CarImage
+            key={image.id}
+            source={{ uri: image.photo }}
+            resizeMode="contain"
+          />
+        ))}
       </CarImagemWrapper>
     </Container>
   );

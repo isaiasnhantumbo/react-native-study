@@ -4,6 +4,7 @@ import { RectButtonProps } from "react-native-gesture-handler";
 
 import GasolineSvg from "../../assets/gasoline.svg";
 import { CarDTO } from "../../Dtos/ICar";
+import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 import {
   About,
   Brand,
@@ -33,8 +34,7 @@ interface Props extends TouchableOpacityProps {
 }
 
 export function Car({ data, ...rest }: Props) {
-  // console.log("DATA",);
-  
+  const MotorIcon = getAccessoryIcon(data.fuel_type);
   return (
     <Container {...rest}>
       <Details>
@@ -42,11 +42,11 @@ export function Car({ data, ...rest }: Props) {
         <Name>{data.name}</Name>
         <About>
           <Rent>
-            <Period>{data.period}</Period>
-            <Price>{data.price} Mt</Price>
+            <Period>{data.rent.period}</Period>
+            <Price>{data.rent.price} Mt</Price>
           </Rent>
           <Type>
-            <GasolineSvg />
+            <MotorIcon />
           </Type>
         </About>
       </Details>
