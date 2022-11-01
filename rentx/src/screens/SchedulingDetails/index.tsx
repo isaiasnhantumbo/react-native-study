@@ -77,15 +77,21 @@ export function SchedulingDetails() {
         id: car.id,
         unavailable_dates,
       })
-      .then(() => navigation.navigate("SchedulingComplete"))
+      .then(() =>
+        navigation.navigate("Confirmation", {
+          message:
+            "Agora você só precisa ir\naté a concessinária da RENTX\npegar o seu automóvel",
+          title: "Carro alugado!",
+          nextScreen: "Home",
+        })
+      )
       .catch(() => {
         setIsLoading(false);
         Alert.alert("Não foi possível confirmar o agendamento");
       });
-      setIsLoading(false);
-
+    setIsLoading(false);
   }
-  const rentalTotal = Number(dates.length * car.rent.price);
+  const rentalTotal = Number(dates.length * car.price);
   useEffect(() => {
     setRentalPeriod({
       start: format(getPlatformDate(new Date(dates[0])), "dd/MM/yyyy"),
@@ -115,8 +121,8 @@ export function SchedulingDetails() {
             <Name>{car.name}</Name>
           </Description>
           <Rent>
-            <Period>{car.rent.period}</Period>
-            <Price>{car.rent.price} Mt</Price>
+            <Period>{car.period}</Period>
+            <Price>{car.price} Mt</Price>
           </Rent>
         </Details>
         <Accessories>
@@ -154,7 +160,7 @@ export function SchedulingDetails() {
           <RentalPriceLabel>TOTAL</RentalPriceLabel>
           <RentalPriceDetails>
             <RentalPriceQuota>
-              {car.rent.price} Mt x{dates.length} diários
+              {car.price} Mt x{dates.length} diários
             </RentalPriceQuota>
             <RentalPriceTotal>{rentalTotal} Mt</RentalPriceTotal>
           </RentalPriceDetails>

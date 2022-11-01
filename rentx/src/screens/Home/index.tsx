@@ -6,6 +6,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 
 import Logo from "../../assets/logo.svg";
 import { Car } from "../../components/Car";
+import { LoadAnimated } from "../../components/LoadAnimated";
 import { Loader } from "../../components/Loader";
 import { CarDTO } from "../../Dtos/ICar";
 import api from "../../services/api";
@@ -54,11 +55,11 @@ export function Home() {
       <Header>
         <HeaderContent>
           <Logo width={RFValue(108)} height={RFValue(12)} />
-          <TotalCars>Total de 26 carros</TotalCars>
+          <TotalCars>Total de {cars.length} carros</TotalCars>
         </HeaderContent>
       </Header>
       {isLoading ? (
-        <Loader />
+        <LoadAnimated />
       ) : (
         <CarList
           data={cars}
