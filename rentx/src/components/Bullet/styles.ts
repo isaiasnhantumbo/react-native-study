@@ -5,9 +5,12 @@ interface Props {
 }
 
 export const Container = styled.View<Props>`
-  background-color: ${({ theme, active }) => active ? theme.colors.title : theme.colors.shape};
-  border-radius: 3px;
-  margin-left: 8px;
-  height: 6px;
   width: 6px;
+  height: 6px;
+
+  background-color: ${({ theme, active }) => 
+  active ? theme.colors.title : theme.colors.shape};
+
+  margin-left: 8px;
+  border-radius: 3px;
 `;

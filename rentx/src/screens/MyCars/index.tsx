@@ -1,30 +1,33 @@
-import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { FlatList, StatusBar } from "react-native";
-import { useTheme } from "styled-components";
+import React, { useState, useEffect } from 'react';
+import { StatusBar, FlatList } from 'react-native';
+import { useTheme } from 'styled-components';
+import { useNavigation } from '@react-navigation/core';
+import { AntDesign } from '@expo/vector-icons';
+import { parseISO, format } from 'date-fns';
 
-import { BackButton } from "../../components/BackButton";
-import { Car } from "../../components/Car";
-import { LoadAnimated } from "../../components/LoadAnimated";
-import { Loader } from "../../components/Loader";
-import { CarDTO } from "../../Dtos/ICar";
-import api from "../../services/api";
+import { BackButton } from '../../components/BackButton';
+import { LoadAnimation } from '../../components/LoadAnimation';
+
+import { Car } from '../../components/Car';
+import { CarDTO } from '../../dtos/CarDTO';
+import { Car as ModelCar } from '../../database/model/Car';
+import { api } from '../../services/api';
+
 import {
-  Appointment,
-  AppointmentQuantity,
-  AppointmentTitle,
-  CarFooter,
-  CarFooterDate,
-  CarFooterPeriod,
-  CarFooterTitle,
-  CarWrapper,
   Container,
-  Content,
   Header,
-  Subtitle,
   Title,
-} from "./styles";
+  SubTitle,
+  Content,
+  Appointments,
+  AppointmentsTitle,
+  AppointmentsQuantity,
+  CarWrapper,
+  CarFooter,
+  CarFooterTitle,
+  CarFooterPeriod,
+  CarFooterDate,
+} from './styles';
 
 interface CarProps {
   id: string;
@@ -34,76 +37,102 @@ interface CarProps {
   endDate: string;
 }
 
-export function MyCars() {
-  const [cars, setCars] = useState<CarProps[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const theme = useTheme();
+interface DataProps {
+  id: string;
+  car: ModelCar; 
+  start_date: string;
+  end_date: string;  
+}
+
+export function MyCars(){
+  const [cars, setCars] = useState<DataProps[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const navigation = useNavigation();
+  const  theme = useTheme();
+
+  function handleBack(){
+    navigation.goBack();    
+  }
 
   useEffect(() => {
-    async function getCars() {
+    async function fetchCars(){
       try {
-        const response = await api.get("/schedules_byuser?user_id=1");
-        console.log(response.data);
-        setCars(response.data);
+        const response = await api.get('/rentals');   
+        const dataFormatted = response.data.map((data: DataProps) => {
+          return {
+            car: data.car,
+            start_date: format(parseISO(data.start_date), 'dd/MM/yyyy'),
+            end_date: format(parseISO(data.end_date), 'dd/MM/yyyy'),
+          }
+        })           
+        setCars(dataFormatted);
       } catch (error) {
         console.log(error);
-      } finally {
+      } finally{
         setLoading(false);
       }
     }
-    getCars();
-  }, []);
+
+    fetchCars();
+  },[]);
+
   return (
     <Container>
-      <StatusBar
-        backgroundColor="transparent"
-        barStyle="light-content"
-        translucent
-      />
       <Header>
-        <BackButton
-          color={theme.colors.shape}
-          onPress={() => navigation.goBack()}
+        <StatusBar
+          barStyle="light-content"
+          translucent
+          backgroundColor="transparent"
         />
+        <BackButton
+          onPress={handleBack} 
+          color={theme.colors.shape}
+        />
+
         <Title>
-          Escolha uma{"\n"}data de início e{"\n"}fim do aluguel
+          Escolha uma {'\n'}
+          data de início e {'\n'}
+          fim do aluguel
         </Title>
-        <Subtitle>Conforto, segurança e praticidade</Subtitle>
+
+        <SubTitle>
+          Conforto, segurança e praticidade.
+        </SubTitle>
       </Header>
-      {loading ? (
-        <LoadAnimated />
-      ) : (
+      { 
+        loading ? <LoadAnimation /> :
         <Content>
-          <Appointment>
-            <AppointmentTitle>Agendamentos feitos</AppointmentTitle>
-            <AppointmentQuantity>{cars.length}</AppointmentQuantity>
-          </Appointment>
-          <FlatList
+          <Appointments>
+            <AppointmentsTitle>Agendamentos feitos</AppointmentsTitle>
+            <AppointmentsQuantity>{cars.length}</AppointmentsQuantity>
+          </Appointments>
+
+          <FlatList 
             data={cars}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => String(item.id)}
             showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <CarWrapper>
                 <Car data={item.car} />
                 <CarFooter>
                   <CarFooterTitle>Período</CarFooterTitle>
                   <CarFooterPeriod>
-                    <CarFooterDate>{item.startDate}</CarFooterDate>
-                    <AntDesign
+                    <CarFooterDate>{item.start_date}</CarFooterDate>
+                    <AntDesign 
                       name="arrowright"
                       size={20}
                       color={theme.colors.title}
                       style={{ marginHorizontal: 10 }}
                     />
-                    <CarFooterDate>{item.endDate}</CarFooterDate>
+                    <CarFooterDate>{item.end_date}</CarFooterDate>
                   </CarFooterPeriod>
                 </CarFooter>
               </CarWrapper>
             )}
-          />
+          /> 
         </Content>
-      )}
+      }
     </Container>
   );
 }

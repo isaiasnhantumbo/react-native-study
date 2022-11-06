@@ -1,60 +1,51 @@
-import React from "react";
-import { Image, TouchableOpacityProps } from "react-native";
-import { RectButtonProps } from "react-native-gesture-handler";
+import React from 'react';
+import { RectButtonProps } from 'react-native-gesture-handler';
 
-import GasolineSvg from "../../assets/gasoline.svg";
-import { CarDTO } from "../../Dtos/ICar";
-import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
+import { getAccessoryIcon } from '../../utils/getAccessoryIcon';
+import { Car as ModelCar } from '../../database/model/Car';
+
 import {
-  About,
-  Brand,
-  CarImage,
   Container,
   Details,
+  Brand,
   Name,
+  About,
+  Rent,
   Period,
   Price,
-  Rent,
   Type,
-} from "./styles";
+  CarImage
+} from './style';
 
-interface CarProps {
-  brand: string;
-  name: string;
-  rent: {
-    period: string;
-    price: number;
-  };
-  thumbnail: string;
+
+interface Props extends RectButtonProps{
+  data: ModelCar;
 }
 
-interface Props extends TouchableOpacityProps {
-  data: CarDTO;
-  onPress: () => void;
-}
-
-export function Car({ data, ...rest }: Props) {
+export function Car({ data, ...rest } : Props){
   const MotorIcon = getAccessoryIcon(data.fuel_type);
+
   return (
     <Container {...rest}>
       <Details>
         <Brand>{data.brand}</Brand>
         <Name>{data.name}</Name>
+
         <About>
           <Rent>
             <Period>{data.period}</Period>
-            <Price>{data.price} Mt</Price>
+            <Price>{`R$ ${data.price}`}</Price>
           </Rent>
+
           <Type>
             <MotorIcon />
           </Type>
         </About>
       </Details>
-      <CarImage
+
+      <CarImage 
+        source={{ uri: data.thumbnail }} 
         resizeMode="contain"
-        source={{
-          uri: data.thumbnail,
-        }}
       />
     </Container>
   );

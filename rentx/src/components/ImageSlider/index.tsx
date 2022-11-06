@@ -1,37 +1,40 @@
-import { useRef, useState } from "react";
-import { FlatList, ViewToken } from "react-native";
+import React, { useState, useRef } from 'react';
+import { FlatList, ViewToken } from 'react-native';
+import FastImage from 'react-native-fast-image'
 
-import { Bullet } from "../Bullet";
+import { Bullet } from '../Bullet';
+
 import {
-  CarImage,
-  CarImagemWrapper,
   Container,
-  ImageIndex,
   ImageIndexes,
-} from "./styles";
+  CarImageWrapper,
+  CarImage,
+} from './styles';
 
-interface ImageSliderProps {
+interface Props {
   imagesUrl: {
     id: string;
     photo: string;
   }[];
 }
+
 interface ChangeImageProps {
   viewableItems: ViewToken[];
   changed: ViewToken[];
 }
-export function ImageSlider({ imagesUrl }: ImageSliderProps) {
+
+export function ImageSlider({imagesUrl}: Props){ 
   const [imageIndex, setImageIndex] = useState(0); 
 
   const indexChanged = useRef((info: ChangeImageProps) => {
     const index = info.viewableItems[0].index!;
     setImageIndex(index);
   });
-  
+
   return (
     <Container>
       <ImageIndexes>
-      {
+        {
           imagesUrl.map((item, index) => (
             <Bullet 
               key={String(item.id)}
@@ -40,17 +43,23 @@ export function ImageSlider({ imagesUrl }: ImageSliderProps) {
           ))
         }
       </ImageIndexes>
+      
       <FlatList
         data={imagesUrl}
-        horizontal
-        keyExtractor={(item) => item.id}
-        onViewableItemsChanged={indexChanged.current}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <CarImagemWrapper>
-            <CarImage resizeMode="contain" source={{ uri: item.photo }} />
-          </CarImagemWrapper>
+          <CarImageWrapper>
+            <CarImage 
+              source={{ 
+                uri: item.photo                 
+              }}
+              resizeMode="contain"            
+            />
+          </CarImageWrapper>
         )}
+        horizontal
         showsHorizontalScrollIndicator={false}
+        onViewableItemsChanged={indexChanged.current}
       />
     </Container>
   );
